@@ -9,9 +9,9 @@ using System;
 [SerializeField]
 public class cls_GameLobby
 {
-    public string gameNameplr1, gameNameplr2,  DateTimeCreated, player1Option, player2Option , playerTurn ,p1Points ,p2Points;
+    public string gameNameplr1, gameNameplr2,  DateTimeCreated, player1Option, player2Option , playerTurn ,p1Points ,p2Points , numRounds;
 
-    public cls_GameLobby(string gName1, string gName2,  string dTCreated, string p1Op, string p2Op , string pTurn , string p1Score, string p2Score)
+    public cls_GameLobby(string gName1, string gName2,  string dTCreated, string p1Op, string p2Op , string pTurn , string p1Score, string p2Score , string nRounds)
     {
         this.gameNameplr1 = gName1;
         this.gameNameplr2 = gName2;
@@ -21,6 +21,7 @@ public class cls_GameLobby
         this.playerTurn = pTurn;
         this.p1Points = p1Score;
         this.p2Points = p2Score;
+        this.numRounds = nRounds;
     }
 
 }
@@ -57,13 +58,14 @@ public class FirebaseController : MonoBehaviour
 
     private int namecounter = 0;
 
-   public static  int optionCounter = 0;
+    public static  int optionCounter = 0;
 
     public static int player1Points = 0;
 
     public static int player2Points = 0;
 
-    public static int roundNum = 0;
+    public static int roundCounter = 0;
+
 
 
     public static IEnumerator CreateGameInstance(string sGName1)
@@ -77,7 +79,7 @@ public class FirebaseController : MonoBehaviour
         sUniqueKey = dbRef.Child("Objects").Push().Key;
 
         //Intialising the lobby
-        cls_GameLobby lobby = new cls_GameLobby(sGName1, "", now.ToString(), player1Option, player2Option , playerTurn ,player1Points.ToString(), player2Points.ToString());
+        cls_GameLobby lobby = new cls_GameLobby(sGName1, "", now.ToString(), player1Option, player2Option , playerTurn ,player1Points.ToString(), player2Points.ToString(), roundCounter.ToString());
 
         //puts the key as a child of the object  
         dbRef.Child("Objects").Child(sUniqueKey).ValueChanged += HandleValueChanged;
@@ -135,11 +137,11 @@ public class FirebaseController : MonoBehaviour
                 if (child.Key == "playerTurn")
                 {
                     playerTurn = child.Value.ToString();
-                    Debug.Log(playerTurn + "Player TURN");
                 }
-                if (child.Key == "GameWinner")
+
+                if (child.Key == "numRounds")
                 {
-                    playerWinner = child.Value.ToString();
+                    roundCounter = int.Parse(child.Value.ToString());
                 }
             
 
@@ -160,6 +162,7 @@ public class FirebaseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
 
         //Leve it runing until GameNameP2 != ""
 
@@ -207,6 +210,10 @@ public class FirebaseController : MonoBehaviour
 
         if (player1CurrentOption != "" && player2CurrentOption != "")
         {
+            roundCounter+=1;
+            dbRef.Child("Objects").Child(sUniqueKey).Child("numRounds").SetValueAsync(roundCounter);
+            Debug.Log("ROUND COUNTER" + roundCounter);
+
             if (player1CurrentOption == player2CurrentOption)
             {
                 Debug.Log("TIEE");
@@ -280,6 +287,11 @@ public class FirebaseController : MonoBehaviour
             }
 
         }
+
+        if (roundCounter == 5)
+        {
+            Debug.Log("GAMEOVER");
+        }
     
         
 
@@ -325,7 +337,7 @@ public class FirebaseController : MonoBehaviour
     public static void AddPlayersToLobby(string gameName1, string gameName2, string key)
     {
 
-        cls_GameLobby GameLobby = new cls_GameLobby(gameName1, gameName2, now.ToString(), player1Option, player2Option ,playerTurn,player1Points.ToString(),player2Points.ToString());
+        cls_GameLobby GameLobby = new cls_GameLobby(gameName1, gameName2, now.ToString(), player1Option, player2Option ,playerTurn,player1Points.ToString(),player2Points.ToString(),roundCounter.ToString());
         dbRef.Child("Objects").Child(key).SetRawJsonValueAsync(JsonUtility.ToJson(GameLobby));
     }
 }
