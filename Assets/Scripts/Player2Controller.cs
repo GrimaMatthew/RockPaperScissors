@@ -33,8 +33,6 @@ public class Player2Controller : MonoBehaviour
 
         if (intialNameEntered == nameInFirebase && Input.GetMouseButtonDown(0) &&  FirebaseController.playerTurn == "p2")
             {
-            Debug.Log("000FIREEEEE");
-
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                
@@ -47,10 +45,8 @@ public class Player2Controller : MonoBehaviour
                     Debug.Log(tempGameObject.tag + "TAG");
                     GameManager.Player1Turn = true;
                     GameManager.Player2Turn = false;
-                    Debug.Log("FIREEEEE");
                     FirebaseController.player2CurrentOption = tempGameObject.tag;
-                  
-
+                    StartCoroutine(FirebaseController.SetOptionP2());
 
                 }
                 else

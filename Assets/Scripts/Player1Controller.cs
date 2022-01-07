@@ -58,6 +58,7 @@ public class Player1Controller : MonoBehaviour
                     GameManager.Player1Turn = false; 
                     GameManager.Player2Turn = true;
                     FirebaseController.player1CurrentOption = tempGameObject.tag;
+                    StartCoroutine(FirebaseController.SetOptionP1());
                 }
                 else
                 {

@@ -120,8 +120,15 @@ public class GameManager : MonoBehaviour
                 break;
 
             case "End":
-                GameObject WinnerText = GameObject.Find("winnerTxt");
-                WinnerText.GetComponent<TextMeshProUGUI>().text = FirebaseController.playerWon.ToString();
+                GameObject WinnerText = GameObject.Find("WinnerTxt");
+                if (FirebaseController.playerWon == "p1")
+                {
+                    WinnerText.GetComponent<TextMeshProUGUI>().text = "Winner Player 1";
+                }
+                else if (FirebaseController.playerWon == "p2")
+                {
+                    WinnerText.GetComponent<TextMeshProUGUI>().text = "Winner Player 2";
+                }
                 break;
 
             default:

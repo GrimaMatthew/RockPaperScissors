@@ -198,21 +198,9 @@ public class FirebaseController : MonoBehaviour
             GameManager.Player1Turn = false;
         }
 
-        if (player1CurrentOption != null && player1CurrentOption != "")
-        {
-            if (optionCounter == 0)
-            {
-                dbRef.Child("Objects").Child(sUniqueKey).Child("player1Option").SetValueAsync(player1CurrentOption);
-                optionCounter++;
-            }
-        }
+    
 
-
-        if (player2CurrentOption != null && player2CurrentOption != "")
-        {
-            
-            dbRef.Child("Objects").Child(sUniqueKey).Child("player2Option").SetValueAsync(player2CurrentOption);
-        }
+  
 
 
         if (player1CurrentOption != "" && player2CurrentOption != "")
@@ -253,7 +241,7 @@ public class FirebaseController : MonoBehaviour
             }
             else if (player1CurrentOption == "Scissor" && player2CurrentOption == "Paper")
             {
-                player1Points++;
+               player1Points++;
                 dbRef.Child("Objects").Child(sUniqueKey).Child("p1Points").SetValueAsync(player1Points.ToString());
                 player1CurrentOption = "";
                 player2CurrentOption = "";
@@ -311,6 +299,7 @@ public class FirebaseController : MonoBehaviour
             {
                 playerWon = "Tie";
                 dbRef.Child("Objects").Child(sUniqueKey).Child("playerWon").SetValueAsync(playerWon);
+                
             }
         }
     
@@ -352,7 +341,32 @@ public class FirebaseController : MonoBehaviour
     }
 
 
-    public static void AddPlayersToLobby(string gameName1, string gameName2, string key)
+    public static IEnumerator SetOptionP1()
+    {
+        if (player1CurrentOption != null && player1CurrentOption != "")
+        {
+            if (optionCounter == 0)
+            {
+                dbRef.Child("Objects").Child(sUniqueKey).Child("player1Option").SetValueAsync(player1CurrentOption);
+                optionCounter++;
+                yield return null;
+            }
+        }
+
+    }
+
+    public static IEnumerator SetOptionP2()
+    {
+        if (player2CurrentOption != null && player2CurrentOption != "")
+        {
+
+            dbRef.Child("Objects").Child(sUniqueKey).Child("player2Option").SetValueAsync(player2CurrentOption);
+            yield return null;
+        }
+    }
+
+
+        public static void AddPlayersToLobby(string gameName1, string gameName2, string key)
     {
 
         cls_GameLobby GameLobby = new cls_GameLobby(gameName1, gameName2, now.ToString(), player1Option, player2Option ,playerTurn,player1Points.ToString(),player2Points.ToString(),roundCounter.ToString(),playerWon);
