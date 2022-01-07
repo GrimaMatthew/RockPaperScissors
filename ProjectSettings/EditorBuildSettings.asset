@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Start.unity
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/LobbyKey.unity
+    guid: 52972c396c7554dc18847ca37eca2405
+  - enabled: 1
+    path: Assets/Scenes/LiveGame.unity
+    guid: 8dff7a125a896494595efea60263b550
+  - enabled: 1
+    path: Assets/Scenes/JoinLobby.unity
+    guid: ea041f6b4977c4331b867a993bbad71a
+  - enabled: 1
+    path: Assets/Scenes/End.unity
+    guid: 66b63aed1f3914d6a8b2443978f7a9bd
+  m_configObjects: {}

@@ -1,0 +1,37 @@
+{
+  "client": [
+    {
+      "services": {
+        "appinvite_service": {
+          "status": 1
+        }, 
+        "analytics_service": {
+          "status": 0
+        }
+      }, 
+      "oauth_client": [
+        {
+          "client_id": "659558831753-n838l4vo650qj1t9r1qivcc28dhs1llp.apps.googleusercontent.com"
+        }
+      ], 
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAbHjTg-IW0MaGalhUoDAUhriMD2cDJeU"
+        }
+      ], 
+      "client_info": {
+        "mobilesdk_app_id": "1:659558831753:ios:97682433aaca0dcfdc1858", 
+        "android_client_info": {
+          "package_name": "rockpaper"
+        }
+      }
+    }
+  ], 
+  "configuration_version": "1", 
+  "project_info": {
+    "storage_bucket": "rockpaper-89f8c.appspot.com", 
+    "project_id": "rockpaper-89f8c", 
+    "firebase_url": "https://rockpaper-89f8c-default-rtdb.europe-west1.firebasedatabase.app", 
+    "project_number": "659558831753"
+  }
+}
