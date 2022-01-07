@@ -41,11 +41,15 @@ public class GameManager : MonoBehaviour
     {
         if (player1Score != null && player2Score != null)
         {
-           
+
             player1Score.text = FirebaseController.player1Points.ToString();
             player2Score.text = FirebaseController.player2Points.ToString();
         }
 
+        if (FirebaseController.playerWon != "")
+        {
+            LoadScene("End");
+        }
     }
 
 
@@ -115,7 +119,9 @@ public class GameManager : MonoBehaviour
             case "LiveGame":
                 break;
 
-            case "Winner":
+            case "End":
+                GameObject WinnerText = GameObject.Find("winnerTxt");
+                WinnerText.GetComponent<TextMeshProUGUI>().text = FirebaseController.playerWon.ToString();
                 break;
 
             default:
