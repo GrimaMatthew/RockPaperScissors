@@ -9,9 +9,9 @@ using System;
 [SerializeField]
 public class cls_GameLobby
 {
-    public string gameNameplr1, gameNameplr2,  DateTimeCreated, player1Option, player2Option , playerTurn ,p1Points ,p2Points , numRounds, playerWon;
+    public string gameNameplr1, gameNameplr2,  DateTimeCreated, player1Option, player2Option , playerTurn ,p1Points ,p2Points , numRounds, playerWon , gameTimer;
 
-    public cls_GameLobby(string gName1, string gName2,  string dTCreated, string p1Op, string p2Op , string pTurn , string p1Score, string p2Score , string nRounds , string pWon)
+    public cls_GameLobby(string gName1, string gName2,  string dTCreated, string p1Op, string p2Op , string pTurn , string p1Score, string p2Score , string nRounds , string pWon ,string gTime)
     {
         this.gameNameplr1 = gName1;
         this.gameNameplr2 = gName2;
@@ -23,6 +23,7 @@ public class cls_GameLobby
         this.p2Points = p2Score;
         this.numRounds = nRounds;
         this.playerWon = pWon;
+        this.gameTimer = gTime;
     }
 
 }
@@ -69,6 +70,12 @@ public class FirebaseController : MonoBehaviour
 
     public static string playerWon = "";
 
+    public static string gameTimer = "";
+
+    public static float timeT=0;
+
+    public static bool startedGame = false;
+
 
 
     public static IEnumerator CreateGameInstance(string sGName1)
@@ -82,7 +89,7 @@ public class FirebaseController : MonoBehaviour
         sUniqueKey = dbRef.Child("Objects").Push().Key;
 
         //Intialising the lobby
-        cls_GameLobby lobby = new cls_GameLobby(sGName1, "", now.ToString(), player1Option, player2Option , playerTurn ,player1Points.ToString(), player2Points.ToString(), roundCounter.ToString(), playerWon);
+        cls_GameLobby lobby = new cls_GameLobby(sGName1, "", now.ToString(), player1Option, player2Option , playerTurn ,player1Points.ToString(), player2Points.ToString(), roundCounter.ToString(), playerWon , gameTimer);
 
         //puts the key as a child of the object  
         dbRef.Child("Objects").Child(sUniqueKey).ValueChanged += HandleValueChanged;
@@ -169,6 +176,13 @@ public class FirebaseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (startedGame)
+        {
+            timeT += Time.deltaTime;
+            float seconds = timeT % 60;
+            gameTimer = seconds.ToString();
+            dbRef.Child("Objects").Child(sUniqueKey).Child("gameTimer").SetValueAsync(gameTimer);
+        }
 
 
         //Leve it runing until GameNameP2 != ""
@@ -178,6 +192,7 @@ public class FirebaseController : MonoBehaviour
             if (namecounter == 0)
             {
                 GameManager.setupNames(sGameName1,sGameName2);
+                startedGame = true;
                 namecounter++;
 
             }
@@ -197,10 +212,6 @@ public class FirebaseController : MonoBehaviour
             dbRef.Child("Objects").Child(sUniqueKey).Child("playerTurn").SetValueAsync("p1");
             GameManager.Player1Turn = false;
         }
-
-    
-
-  
 
 
         if (player1CurrentOption != "" && player2CurrentOption != "")
@@ -366,10 +377,12 @@ public class FirebaseController : MonoBehaviour
     }
 
 
-        public static void AddPlayersToLobby(string gameName1, string gameName2, string key)
+
+
+    public static void AddPlayersToLobby(string gameName1, string gameName2, string key)
     {
 
-        cls_GameLobby GameLobby = new cls_GameLobby(gameName1, gameName2, now.ToString(), player1Option, player2Option ,playerTurn,player1Points.ToString(),player2Points.ToString(),roundCounter.ToString(),playerWon);
+        cls_GameLobby GameLobby = new cls_GameLobby(gameName1, gameName2, now.ToString(), player1Option, player2Option ,playerTurn,player1Points.ToString(),player2Points.ToString(),roundCounter.ToString(),playerWon, gameTimer);
         dbRef.Child("Objects").Child(key).SetRawJsonValueAsync(JsonUtility.ToJson(GameLobby));
     }
 }

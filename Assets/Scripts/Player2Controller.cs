@@ -32,7 +32,7 @@ public class Player2Controller : MonoBehaviour
 
 
         if (intialNameEntered == nameInFirebase && Input.GetMouseButtonDown(0) &&  FirebaseController.playerTurn == "p2")
-            {
+        {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;
                
