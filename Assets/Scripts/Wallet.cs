@@ -31,13 +31,19 @@ public class Wallet : MonoBehaviour
 
 
     public static float byteTransferred;
-    public static float byteCount = 145;
+    public static float byteCount ;
     public static float percent;
+
+    public bool loadbar1 = false;
+    public bool loadbar2 = false;
+    public bool loadbar3 = false;
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        playerCoins = 88900;
+        playerCoins = 2000;
   
 
     }
@@ -55,47 +61,77 @@ public class Wallet : MonoBehaviour
 
                 FirebaseStorage storage = FirebaseStorage.DefaultInstance;
                 StorageReference storeRef = storage.GetReferenceFromUrl("gs://rockpaper-89f8c.appspot.com");
-                StorageReference sRefBox = storeRef.Child("DLC").Child("box.png");
+                StorageReference sRefBox = storeRef.Child("DLC").Child("box_black.png");
 
-                for (int i = 0; i <= byteCount; i++)
-                {
-                    
-                    downloadDlcSideBar(sRefBox);
-                    PS1_loader(percent);
-                    Debug.Log("INLOOP");
-                    if (slider1.value < slider1Target)
-                    {
-                        if (slider1.value != 1)
-                        {
-                            slider1.value += fillSpeed * Time.deltaTime;
-                        }
-                       
-
-                    }
-
-                }
-
-                Debug.Log(slider1Target + "SliderTarget");
-                Debug.Log(slider1.value + "SliderTarget");
-
-              
+                downloadDlcSideBar(sRefBox , "slider1");
                 fslider1 = false;
+                
+            }
+        }
+
+        if (loadbar1)
+        {
+            Debug.Log("INLOADER");
+            slider1.value += fillSpeed * Time.deltaTime;
+            
+            if (slider1.value == 1)
+            {
+                loadbar1 = false;
+                slider1.value = 0;
             }
         }
 
         if (fslider2)
         {
-            if (slider2.value < slider2Target)
+            if (playerCoins >= 200)
             {
-                slider2.value += fillSpeed * Time.deltaTime;
-                fslider2 = true;
+                playerCoins = playerCoins - 200;
+
+                FirebaseStorage storage = FirebaseStorage.DefaultInstance;
+                StorageReference storeRef = storage.GetReferenceFromUrl("gs://rockpaper-89f8c.appspot.com");
+                StorageReference sRefBox = storeRef.Child("DLC").Child("box_black.png");
+
+                downloadDlcSideBar(sRefBox , "slider2");
+                fslider2 = false;
+
+            }
+           
+        }
+
+        if (loadbar2)
+        {
+            slider2.value += fillSpeed * Time.deltaTime;
+
+            if (slider2.value == 1)
+            {
+                loadbar2 = false;
+                slider2.value = 0;
             }
         }
-        if (slider3)
+
+        if (fslider3)
         {
-            if (slider3.value < slider3Target)
+            if (playerCoins >= 600)
             {
-                slider3.value += fillSpeed * Time.deltaTime;
+                playerCoins = playerCoins - 600;
+
+                FirebaseStorage storage = FirebaseStorage.DefaultInstance;
+                StorageReference storeRef = storage.GetReferenceFromUrl("gs://rockpaper-89f8c.appspot.com");
+                StorageReference sRefBox = storeRef.Child("DLC").Child("box_black.png");
+
+                downloadDlcSideBar(sRefBox, "slider3");
+                fslider3 = false;
+            }
+        }
+
+        if (loadbar3)
+        {
+            slider3.value += fillSpeed * Time.deltaTime;
+
+            if (slider3.value == 1)
+            {
+                loadbar3 = false;
+                slider3.value = 0;
             }
         }
 
@@ -142,6 +178,9 @@ public class Wallet : MonoBehaviour
 
     public void PS1_loader(float increaseProg)
     {
+        Debug.Log(slider1.value + "SliderVALUE");
+        Debug.Log(slider1Target + "SLIDER1TARGET");
+        Debug.Log(increaseProg + "IncreaseProg");
         slider1Target = slider1.value + increaseProg;
     }
     public void PS2_loader(float increaseProg)
@@ -154,7 +193,7 @@ public class Wallet : MonoBehaviour
     }
 
 
-    public static void downloadDlcSideBar(StorageReference refe )
+    public  void downloadDlcSideBar(StorageReference refe , string sliderChoice)
     {
         const long maxAllowedSize = 1 * 2024 * 2024;
 
@@ -162,17 +201,60 @@ public class Wallet : MonoBehaviour
             new StorageProgress<DownloadState>(state =>
             {
                 Debug.Log(string.Format("Progress: {0} of {1} bytes transferred.",
-                     state.BytesTransferred
-                    ,state.TotalByteCount
+                     state.BytesTransferred,
+                     state.TotalByteCount
                     ));
 
-                byteTransferred = 100;
+                byteTransferred = state.BytesTransferred;
                 byteCount = state.TotalByteCount;
 
-                Debug.Log(byteTransferred + "byteTransfered");
-                Debug.Log(byteCount + "byte Count");
+            
                 percent = ((byteTransferred/byteCount) * 100);
-                Debug.Log(percent + "PERCETN");
+
+
+                if (sliderChoice == "slider1")
+                {
+                    PS1_loader(percent);
+
+                    if (slider1.value < slider1Target)
+                    {
+
+                        loadbar1 = true;
+
+                    }
+                    else
+                    {
+                        Debug.Log("DONE");
+                    }
+                }
+
+                else if (sliderChoice == "slider2")
+                {
+                    PS2_loader(percent);
+                    if (slider2.value < slider2Target)
+                    {
+                        loadbar2 = true;
+                    }
+                    else
+                    {
+                        Debug.Log("DONE");
+                    }
+                }
+                else if (sliderChoice == "slider3")
+                {
+                    PS3_loader(percent);
+                    if (slider3.value < slider3Target)
+                    {
+                        loadbar3 = true;
+                    }
+                    else
+                    {
+                        Debug.Log("DONE");
+                    }
+                }
+
+              
+
             }));
 
      
