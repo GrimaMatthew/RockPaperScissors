@@ -76,6 +76,8 @@ public class FirebaseController : MonoBehaviour
 
     public static bool startedGame = false;
 
+    private bool ti;
+
 
 
     public static IEnumerator CreateGameInstance(string sGName1)
@@ -171,11 +173,22 @@ public class FirebaseController : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
         dbRef = FirebaseDatabase.DefaultInstance.RootReference;
         playerTurn = "p1";
+        ti = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        if (FirebaseController.playerWon != "")
+        {
+            if (ti)
+            {
+                ti = false;
+                GameManager.LoadScene("End");
+            }
+        }
+
         if (startedGame)
         {
             timeT += Time.deltaTime;
@@ -187,6 +200,7 @@ public class FirebaseController : MonoBehaviour
 
         //Leve it runing until GameNameP2 != ""
 
+ 
         if (sGameName2 != "" && sGameName1 != "")
         {
             if (namecounter == 0)
@@ -310,11 +324,25 @@ public class FirebaseController : MonoBehaviour
             {
                 playerWon = "Tie";
                 dbRef.Child("Objects").Child(sUniqueKey).Child("playerWon").SetValueAsync(playerWon);
-                
             }
+
         }
-    
-        
+
+        if (Player1Controller.p1Quit)
+        {
+            playerWon = "p2";
+            dbRef.Child("Objects").Child(sUniqueKey).Child("playerWon").SetValueAsync(playerWon);
+
+        }
+
+        if (Player2Controller.p2Quit)
+        {
+            playerWon = "p1";
+            dbRef.Child("Objects").Child(sUniqueKey).Child("playerWon").SetValueAsync(playerWon);
+
+        }
+
+
 
     }
 

@@ -7,6 +7,8 @@ public class Player1Controller : MonoBehaviour
 {
     string intialNameEntered;
     string nameInFirebase;
+
+    public static bool p1Quit = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -69,6 +71,14 @@ public class Player1Controller : MonoBehaviour
 
     }
 
- 
-   
+    public void QuitGame()
+    {
+        if (intialNameEntered == nameInFirebase && GameManager.numberofPlayers==2)
+        {
+            Debug.Log("Player1: ");
+            p1Quit = true;
+        }
+
+    }
+
 }

@@ -7,6 +7,7 @@ public class Player2Controller : MonoBehaviour
 {
     string intialNameEntered;
     string nameInFirebase;
+    public static bool p2Quit = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -18,6 +19,7 @@ public class Player2Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (intialNameEntered == nameInFirebase)
         {
             if (FirebaseController.playerTurn == "p2")
@@ -57,5 +59,14 @@ public class Player2Controller : MonoBehaviour
         }
         
 
+    }
+
+    public void QuitGame()
+    {
+        if (intialNameEntered == nameInFirebase && GameManager.numberofPlayers == 2)
+        {
+            p2Quit = true;
+        }  
+        
     }
 }

@@ -28,11 +28,14 @@ public class GameManager : MonoBehaviour
     public static bool Player2Turn;
     public static bool Player1Turn;
 
+    public static int numberofPlayers = 0;
 
+    
 
     // Start is called before the first frame update
     void Start()
     {
+      
      
     }
 
@@ -46,16 +49,18 @@ public class GameManager : MonoBehaviour
             player2Score.text = FirebaseController.player2Points.ToString();
         }
 
-        if (FirebaseController.playerWon != "")
-        {
-            LoadScene("End");
-        }
+    
     }
 
 
     public static void LoadScene(string sSceneName)
     {
         SceneManager.LoadScene(sSceneName);
+    }
+
+    public static void RestartGame()
+    {
+        LoadScene("Start");
     }
 
     public void createNewGameInstance()
@@ -102,8 +107,10 @@ public class GameManager : MonoBehaviour
 
         Gamename1.GetComponent<TextMeshProUGUI>().text = name1;
         Gamename2.GetComponent<TextMeshProUGUI>().text = name2;
-
+        numberofPlayers = 2;
     }
+
+   
 
     public void Awake()
     {
